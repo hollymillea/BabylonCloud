@@ -31,26 +31,12 @@ var createScene = function () {
   // Default intensity is 1. Let's dim the light a small amount
   light.intensity = 0.7;
 
-  // Load the GLB file
-  BABYLON.SceneLoader.Append(
-    './duck.glb', // Adjust the path to your GLB file
-    '',
-    scene,
-    function (scene) {
-      console.log('GLB file loaded');
-    },
-    null,
-    function (scene, message) {
-      console.error('Error loading GLB file:', message);
-    }
-  );
-
   // Create a full screen UI Button to test browser-server communication
   var advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
   createBackendTestButton(advancedTexture);
 
-  createFileInputBox();
+  createFileInputBox(scene);
 
   return scene;
 };

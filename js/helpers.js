@@ -1,5 +1,6 @@
 import * as GUI from '@babylonjs/gui';
 import './helpers.css';
+import * as BABYLON from '@babylonjs/core';
 
 export const createBackendTestButton = (advancedTexture) => {
   const button = GUI.Button.CreateSimpleButton("button", "Click Me");
@@ -26,7 +27,7 @@ export const createBackendTestButton = (advancedTexture) => {
 }
 
 
-export const createFileInputBox = () => {
+export const createFileInputBox = (scene) => {
   // Create an input box to read in GLBs
   var glbInput = document.createElement('input');
   glbInput.type = 'file';
@@ -37,12 +38,17 @@ export const createFileInputBox = () => {
   glbInput.addEventListener('change', function (event) {
     var file = event.target.files[0];
     if (file) {
-      loadGLB(file);
+      loadGLB(scene, file);
     }
   });
 
   // Add to the front-end page
   document.body.appendChild(glbInput);
+}
 
-//   advancedTexture.addControl(button);
+
+export const loadGLB = (scene, file) => {
+  BABYLON.SceneLoader.ImportMesh('', 'file:///', file, scene, function (meshes) {
+      console.log('GLB file loaded:', meshes);
+    });
 }
