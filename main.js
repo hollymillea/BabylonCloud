@@ -1,7 +1,6 @@
 import './style.css';
-
 import * as BABYLON from '@babylonjs/core';
-import * as GUI from '@babylonjs/gui';
+import '@babylonjs/loaders';  // Ensure the loaders package is included
 
 var createScene = function () {
   // This creates a basic Babylon Scene object (non-mesh)
@@ -30,46 +29,19 @@ var createScene = function () {
   // Default intensity is 1. Let's dim the light a small amount
   light.intensity = 0.7;
 
-  // Our built-in 'sphere' shape.
-  var sphere = BABYLON.MeshBuilder.CreateSphere(
-    'sphere',
-    { diameter: 2, segments: 32 },
-    scene
-  );
-
-  // Move the sphere upward 1/2 its height
-  sphere.position.y = 1;
-
-  // Our built-in 'ground' shape.
-  var ground = BABYLON.MeshBuilder.CreateGround(
-    'ground',
-    { width: 6, height: 6 },
-    scene
-  );
-
-  // Create a full screen UI Button to test browser-server communication
-  var advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-  const button = GUI.Button.CreateSimpleButton("button", "Click Me");
-  button.width = "150px";
-  button.height = "40px";
-  button.color = "white";
-  button.background = "green";
-
-  button.onPointerClickObservable.add(async function() {
-    try{
-      // Send a GET request to '/example' route
-      const response = await fetch('/example');
-      if (!response.ok) {
-        throw new Error('Network was not okay');
-      }
-      const data = await response.text();
-      console.log("DATA:", data);
-    } catch(error) {
-      console.error("Error fetching response:", error);
+  // Load the GLB file
+  BABYLON.SceneLoader.Append(
+    './duck.glb', // Adjust the path to your GLB file
+    '',
+    scene,
+    function (scene) {
+      console.log('GLB file loaded');
+    },
+    null,
+    function (scene, message) {
+      console.error('Error loading GLB file:', message);
     }
-  });
-
-  advancedTexture.addControl(button);
+  );
 
   return scene;
 };
