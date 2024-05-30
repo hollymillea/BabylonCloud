@@ -27,7 +27,7 @@ export const createBackendTestButton = (advancedTexture) => {
 }
 
 
-export const createFileInputBox = (scene) => {
+export const createFileInputBox = (scene, serverURL) => {
   // Create an input box to read in GLBs
   var glbInput = document.createElement('input');
   glbInput.type = 'file';
@@ -37,8 +37,9 @@ export const createFileInputBox = (scene) => {
   // Event listener for input change
   glbInput.addEventListener('change', function (event) {
     var file = event.target.files[0];
+    // If a file has been input, send this to our server
     if (file) {
-      loadGLB(scene, file);
+      uploadGLB(file, serverURL);
     }
   });
 
@@ -51,4 +52,26 @@ export const loadGLB = (scene, file) => {
   BABYLON.SceneLoader.ImportMesh('', 'file:///', file, scene, function (meshes) {
       console.log('GLB file loaded:', meshes);
     });
+}
+
+// Send our file to our server
+export const uploadGLB = (file, serverURL) => {
+  var formData = new FormData();
+
+  // Give our file the name of 'glbFile' so the server can identify it
+  formData.append('glbFile', file);
+
+  fetch(serverURL, {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to upload GLB file');
+    }
+    console.log('GLB file uploaded successfully');
+  })
+  .catch(error => {
+    console.error('Error uploading GLB file:', error);
+  });
 }

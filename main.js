@@ -4,6 +4,8 @@ import '@babylonjs/loaders';  // Import the loaders package to include the GLTF 
 import * as GUI from '@babylonjs/gui';
 import { createBackendTestButton, createFileInputBox } from './js/helpers';
 
+const serverURL = 'http://localhost:5173/upload-glb'; // Change the URL to match your server endpoint
+
 var createScene = function () {
   // This creates a basic Babylon Scene object (non-mesh)
   var scene = new BABYLON.Scene(engine);
@@ -36,7 +38,7 @@ var createScene = function () {
 
   createBackendTestButton(advancedTexture);
 
-  createFileInputBox(scene);
+  createFileInputBox(scene, serverURL);
 
   return scene;
 };
