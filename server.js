@@ -27,6 +27,7 @@ const upload = multer({ storage: storage });
 
 // Route for handling file uploads (we are expecting a single file with the name 'glbFile')
 app.post('/upload-glb', upload.single('glbFile'), (req, res) => {
+  res.send("holly");
   // Handle the uploaded GLB file here
   console.log('GLB file uploaded:', req.file);
 

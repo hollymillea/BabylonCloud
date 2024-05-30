@@ -55,23 +55,23 @@ export const loadGLB = (scene, file) => {
 }
 
 // Send our file to our server
-export const uploadGLB = (file, serverURL) => {
+async function uploadGLB (file, serverURL) {
   var formData = new FormData();
 
   // Give our file the name of 'glbFile' so the server can identify it
   formData.append('glbFile', file);
 
-  fetch(serverURL, {
-    method: 'POST',
-    body: formData
-  })
-  .then(response => {
+  try {
+    // Send a POST request to '/upload-glb' route
+    const response = await fetch(serverURL, {method: 'POST', body: formData});
+    
     if (!response.ok) {
-      throw new Error('Failed to upload GLB file');
+      throw new Error('Could not send GLB to server.');
     }
-    console.log('GLB file uploaded successfully');
-  })
-  .catch(error => {
-    console.error('Error uploading GLB file:', error);
-  });
+    const data = await response.text();
+    console.log("DATA:", data);
+  }
+  catch (error) {
+    console.error("Error sending GLB:", error);
+  }
 }
