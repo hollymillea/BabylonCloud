@@ -1,7 +1,5 @@
 import express from "express";
 import exampleRoute from "./routes/example.js";
-import path from "path";
-import { fileURLToPath } from 'url';
 
 // Create the server
 const app = express();

@@ -2,6 +2,7 @@ import './style.css';
 import * as BABYLON from '@babylonjs/core';
 import '@babylonjs/loaders';  // Import the loaders package to include the GLTF loader
 import * as GUI from '@babylonjs/gui';
+import { createBackendTestButton, createFileInputBox } from './helpers';
 
 var createScene = function () {
   // This creates a basic Babylon Scene object (non-mesh)
@@ -46,27 +47,10 @@ var createScene = function () {
 
   // Create a full screen UI Button to test browser-server communication
   var advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-  const button = GUI.Button.CreateSimpleButton("button", "Click Me");
-  button.width = "150px";
-  button.height = "40px";
-  button.color = "white";
-  button.background = "green";
 
-  button.onPointerClickObservable.add(async function() {
-    try {
-      // Send a GET request to '/example' route
-      const response = await fetch('/example');
-      if (!response.ok) {
-        throw new Error('Network was not okay');
-      }
-      const data = await response.text();
-      console.log("DATA:", data);
-    } catch (error) {
-      console.error("Error fetching response:", error);
-    }
-  });
+  createBackendTestButton(advancedTexture);
 
-  advancedTexture.addControl(button);
+  createFileInputBox(advancedTexture);
 
   return scene;
 };
