@@ -1,4 +1,5 @@
 import * as GUI from '@babylonjs/gui';
+import './helpers.css';
 
 export const createBackendTestButton = (advancedTexture) => {
   const button = GUI.Button.CreateSimpleButton("button", "Click Me");
@@ -26,5 +27,22 @@ export const createBackendTestButton = (advancedTexture) => {
 
 
 export const createFileInputBox = () => {
+  // Create an input box to read in GLBs
+  var glbInput = document.createElement('input');
+  glbInput.type = 'file';
+  glbInput.id = 'glbInput';
+  glbInput.accept = '.glb';
 
+  // Event listener for input change
+  glbInput.addEventListener('change', function (event) {
+    var file = event.target.files[0];
+    if (file) {
+      loadGLB(file);
+    }
+  });
+
+  // Add to the front-end page
+  document.body.appendChild(glbInput);
+
+//   advancedTexture.addControl(button);
 }

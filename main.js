@@ -2,7 +2,7 @@ import './style.css';
 import * as BABYLON from '@babylonjs/core';
 import '@babylonjs/loaders';  // Import the loaders package to include the GLTF loader
 import * as GUI from '@babylonjs/gui';
-import { createBackendTestButton, createFileInputBox } from './helpers';
+import { createBackendTestButton, createFileInputBox } from './js/helpers';
 
 var createScene = function () {
   // This creates a basic Babylon Scene object (non-mesh)
@@ -50,7 +50,7 @@ var createScene = function () {
 
   createBackendTestButton(advancedTexture);
 
-  createFileInputBox(advancedTexture);
+  createFileInputBox();
 
   return scene;
 };
