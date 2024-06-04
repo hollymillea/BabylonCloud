@@ -37,9 +37,42 @@ export const createFileInputBox = (scene, serverURL) => {
   // Event listener for input change
   glbInput.addEventListener('change', function (event) {
     var file = event.target.files[0];
+
+    const fileReader = new FileReader();
+    fileReader.readAsArrayBuffer(file);
+    fileReader.onload = async (event) => {
+      // This is the data
+      const content = event.target.result;
+
+      // How many chunks are we splitting our data up into?
+      const dataSize = content.byteLength;
+      const CHUNK_SIZE = 1000;
+      const totalChunks = dataSize / CHUNK_SIZE; 
+      
+      // Generate a file name (add random letters to the string of the glb name)
+      const fileName = Math.random().toString(36).slice(-6) + file.name;
+
+      // For every chunk, get the corresponding data and send it to the server
+      for (let i = 0; i < totalChunks + 1; i++) {
+        // An array buffer of length CHUNK_SIZE
+        let chunk = content.slice(i*CHUNK_SIZE, (i+1)*CHUNK_SIZE);
+        
+        // Send the chunk (we are using the fileName as our unique identifier)
+        await fetch(serverURL + '/upload?fileName=' + fileName, {
+          'method' : 'POST',
+          'headers' : {
+              'content-type' : "application/octet-stream",
+              'content-length' : chunk.length,
+          },
+          'body': chunk
+        })
+    }
+    }
+
+
     // If a file has been input, send this to our server
     if (file) {
-      uploadGLB(file, serverURL);
+      // uploadGLB(file, serverURL);
     }
   });
 
@@ -47,12 +80,6 @@ export const createFileInputBox = (scene, serverURL) => {
   document.body.appendChild(glbInput);
 }
 
-
-export const loadGLB = (scene, file) => {
-  BABYLON.SceneLoader.ImportMesh('', 'file:///', file, scene, function (meshes) {
-      console.log('GLB file loaded:', meshes);
-    });
-}
 
 // Send our file to our server
 async function uploadGLB (file, serverURL) {
@@ -63,7 +90,7 @@ async function uploadGLB (file, serverURL) {
 
   try {
     // Send a POST request to '/upload-glb' route
-    const response = await fetch(serverURL, {method: 'POST', body: formData});
+    const response = await fetch('/upload-glb', {method: 'POST', body: formData});
     
     if (!response.ok) {
       throw new Error('Could not send GLB to server.');
