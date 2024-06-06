@@ -65,8 +65,12 @@ export const createFileInputBox = (scene, serverURL) => {
               'content-length' : chunk.length,
           },
           'body': chunk
-        })
-    }
+        });
+      }
+
+      // Once we have sent the whole GLB over to the server, we want to tell the server
+      // to unpack the GLB
+      await fetch(serverURL + '/unpack?fileName=' + fileName);
     }
 
 
